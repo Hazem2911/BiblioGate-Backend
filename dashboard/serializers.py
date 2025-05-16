@@ -7,6 +7,6 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username' ,'total_borrowings','total_returns']
+        fields = ['id','email', 'username','password','total_borrowings','total_returns','is_staff']
         #allah y5rbeet django
 
