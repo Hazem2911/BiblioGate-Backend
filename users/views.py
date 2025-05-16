@@ -1,28 +1,26 @@
-from django.contrib.auth import authenticate
-from django.shortcuts import render
-from rest_framework.decorators import api_view
+from django.contrib.auth import login, authenticate
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .models import Users
-from .serializers import LoginSerializers, RegisterSerializer
+from users.serializers import RegisterSerializer
 
 
-# class Login (APIView) :
-#     def post (self, request, *args, **kwargs):
-#         user = authenticate(request=request , username=request.POST['username'] , password=request.POST['password'])
-#         if user :
-#             login(request, user)
-#             return Response("OK" , status=status.HTTP_200_OK)
-#         return Response(status=status.HTTP_401_UNAUTHORIZED)
-class login(APIView):
+@method_decorator(csrf_exempt, name='dispatch')
+class Login(APIView):
     def post(self, request, *args, **kwargs):
-        user = authenticate(request=request, username=request.POST['username'], password=request.POST['password'])
-        if user :
+        username = request.data.get('username')
+        password = request.data.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
             login(request, user)
-            return Response("OK", status=200)
-        return Response(status=401)
+            return Response({"message": "Login successful", "is_staff": user.is_staff}, status=200)
+        else:
+            return Response({"error": "Invalid credentials"}, status=401)
 
+
+@method_decorator(csrf_exempt, name='dispatch')
 class Register(APIView):
     def post(self, request, *args, **kwargs):
         serializer = RegisterSerializer(data=request.data)
