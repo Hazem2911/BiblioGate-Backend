@@ -8,3 +8,5 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = ['id', 'username' ,'total_borrowings','total_returns']
+        #allah y5rbeet django
+

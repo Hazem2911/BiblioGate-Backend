@@ -15,6 +15,8 @@ class usersTable(APIView):
         id = request.query_params.get('id')
         username = request.query_params.get('username')
 
+
+
         filters = {}
         if id:
             filters['id'] = id
