@@ -54,3 +54,19 @@ class DeleteBook(APIView):
                 return Response({"error": "Book not found"}, status=404)
         else:
             return Response({"error": "Book ID is required"}, status=400)
+
+class EditBook(APIView):
+    def put(self, request, *args, **kwargs):
+        book_id = kwargs.get('book_id')
+        if book_id:
+            try:
+                book = Book.objects.get(id=book_id)
+                serializer = addBook_serializer(book, data=request.data)
+                if serializer.is_valid():
+                    serializer.save()
+                    return Response({"message": "Book updated successfully"}, status=200)
+                return Response(serializer.errors, status=400)
+            except Book.DoesNotExist:
+                return Response({"error": "Book not found"}, status=404)
+        else:
+            return Response({"error": "Book ID is required"}, status=400)
