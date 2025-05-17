@@ -1,46 +1,72 @@
-from django.shortcuts import render
-from rest_framework.response import Response
-from rest_framework.views import APIView
+from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_exempt
+import json
+from .models import Favorite
 
-from favorites.models import Favorites
-from favorites.serializers import Favorites_Serializer
 
-class AddFavorites(APIView):
-    def post(self, request, *args, **kwargs):
-        serializer = Favorites_Serializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response("Added Book to favorites Successfully", status=200)
-        return Response(serializer.errors, status=400)
+@csrf_exempt  # Remove this in production and use proper CSRF protection
+@require_http_methods(["POST"])
+def add_favorite(request):
+    try:
+        data = json.loads(request.body)
+        book_id = data.get('book_id')
 
-class GetFavorites(APIView):
-    def get(self, request, *args, **kwargs):
-        user_id = kwargs.get('user_id')
-        if user_id:
-            try:
-                favorites = Favorites.objects.filter(user_id=user_id)
-                serializer = Favorites_Serializer(favorites, many=True)
-                return Response(serializer.data, status=200)
-            except Favorites.DoesNotExist:
-                return Response({"error": "Favorites not found"}, status=404)
+        if not book_id:
+            return JsonResponse({'success': False, 'error': 'No book ID provided'})
+
+        # For now, if user isn't authenticated, use a session-based approach
+        if request.user.is_authenticated:
+            favorite, created = Favorite.objects.get_or_create(
+                user=request.user,
+                book_id=book_id
+            )
         else:
-            favorites = Favorites.objects.all()
-            serializer = Favorites_Serializer(favorites, many=True)
-            return Response(serializer.data, status=200)
+            # Return success but note that it's only stored locally
+            return JsonResponse({'success': True, 'note': 'stored_locally_only'})
 
-class DeleteFavorites(APIView):
-    def delete(self, request, *args, **kwargs):
-        favorite_id = kwargs.get('favorite_id')
-        if favorite_id:
-            try:
-                favorite = Favorites.objects.get(id=favorite_id)
-                serializer = Favorites_Serializer(favorite)
-                favorite.delete()
-                return Response({
-                    "message": "Favorite deleted successfully",
-                    "deleted_favorite": serializer.data
-                }, status=200)
-            except Favorites.DoesNotExist:
-                return Response({"error": "Favorite not found"}, status=404)
+        return JsonResponse({'success': True, 'created': created})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
+
+
+@csrf_exempt  # Remove this in production
+@require_http_methods(["POST"])
+def delete_favorite(request):
+    try:
+        data = json.loads(request.body)
+        book_id = data.get('book_id')
+
+        if not book_id:
+            return JsonResponse({'success': False, 'error': 'No book ID provided'})
+
+        if request.user.is_authenticated:
+            deleted, _ = Favorite.objects.filter(user=request.user, book_id=book_id).delete()
+            return JsonResponse({'success': True, 'deleted': deleted > 0})
         else:
-            return Response({"error": "Favorite ID is required"}, status=400)
+            # Return success for consistency in local-only mode
+            return JsonResponse({'success': True, 'note': 'stored_locally_only'})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
+
+
+@require_http_methods(["GET"])
+def get_favorites(request):
+    try:
+        if request.user.is_authenticated:
+            favorites = list(Favorite.objects.filter(
+                user=request.user
+            ).values_list('book_id', flat=True))
+            return JsonResponse({
+                'success': True,
+                'favorites': favorites
+            })
+        else:
+            # For non-authenticated users, return empty list
+            return JsonResponse({
+                'success': True,
+                'favorites': [],
+                'note': 'user_not_authenticated'
+            })
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})
