@@ -19,5 +19,5 @@ class Book(models.Model):
     category = models.CharField(max_length=100)
     language = models.CharField(max_length=50 , default='English')
     description = models.CharField(max_length=200)
-    cover_image = models.CharField(max_length=1000)
+    image = models.CharField(max_length=1000)
     is_borrowed = models.BooleanField(default=False)
