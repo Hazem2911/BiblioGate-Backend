@@ -1,21 +1,8 @@
-from django.shortcuts import render
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from books.models import Book
 from books.serializers import addBook_serializer
 from books.serializers import getBook_serializer
-
-
-# Create your views here.
-# class Register(APIView):
-#     def post(self, request, *args, **kwargs):
-#         serializer = RegisterSerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response("User registered successfully", status=200)
-#         return Response(serializer.errors, status=400)
-
 
 class AddBook(APIView):
     def post(self,request, *args, **kwargs):
@@ -24,7 +11,6 @@ class AddBook(APIView):
             serializer.save()
             return Response("Added Book Successfully", status=200)
         return Response(serializer.errors, status=400)
-
 
 class GetBook(APIView):
     def get(self, request, *args, **kwargs):
@@ -40,7 +26,6 @@ class GetBook(APIView):
             books = Book.objects.all()
             serializer = getBook_serializer(books, many=True)
             return Response(serializer.data, status=200)
-
 
 class DeleteBook(APIView):
     def delete(self, request, *args, **kwargs):

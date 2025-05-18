@@ -1,15 +1,17 @@
-from django.contrib.auth import get_user_model
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
-from books.models import Book
-from dashboard.serializers import UserSerializer, BorrowedBookSerializer, AvailableBookSerializer, \
-    UserBorrowedBooksSerializer
+from dashboard.serializers import *
 
 # Create your views here.
 
 User = get_user_model()
+
+class LatestBorrowsTable(APIView):
+    def get(self, request, *args, **kwargs):
+        latest_borrows = Book.objects.filter(user__isnull=False).order_by('-user__last_login')[:10]
+        serializer = BorrowedBookSerializer(latest_borrows, many=True)
+        return Response(serializer.data, status=200)
 
 class usersTable(APIView):
     def get(self, request, *args, **kwargs):

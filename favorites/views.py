@@ -1,7 +1,6 @@
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
 from books.models import Book
 from books.serializers import getBook_serializer
 
@@ -22,13 +21,4 @@ class GetFavourites(APIView):
         books= request.user.favourites.all()
         serializer = getBook_serializer(books, many=True)
         return Response(serializer.data)
-
-
-
-# class GetBorrowings(APIView):
-#     def get(self, request, *args, **kwargs):
-#         books = request.user.books.all()
-#         books_serializer = getBook_serializer(books, many=True)
-#         return Response(books_serializer.data, status=status.HTTP_200_OK)
-#
 

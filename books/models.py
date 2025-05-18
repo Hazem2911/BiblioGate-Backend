@@ -1,17 +1,6 @@
 from django.db import models
 from users.models import Users
 # Create your models here.
-# -- Books table
-# CREATE TABLE Books (
-#     book_id INT IDENTITY(1,1) PRIMARY KEY,
-#     title VARCHAR(150) NOT NULL,
-#     author VARCHAR(200) NOT NULL,
-#     category VARCHAR(100) NOT NULL,
-#     description VARCHAR(200) NOT NULL,
-#     cover_image VARCHAR(500) Not Null
-# );
-
-
 
 class Book(models.Model):
     title = models.CharField(max_length=150)
