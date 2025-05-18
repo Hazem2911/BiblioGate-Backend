@@ -26,3 +26,5 @@ class Users(AbstractUser):
     is_staff = models.BooleanField(default=False)
 
 
+
+

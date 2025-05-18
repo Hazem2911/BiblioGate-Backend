@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="db [2]" uuid="f039bd44-c020-466f-a6d0-cb835b467baf">
+    <data-source source="LOCAL" name="db" uuid="0070f83f-7747-4666-ad5c-3ab6aee2f81d">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\Users\mokyk\PycharmProjects\BiblioGate-Backend\db.sqlite3</jdbc-url>
+      <jdbc-url>jdbc:sqlite:C:\Users\DELL\Documents\GitHub\BiblioGate-Backend\db.sqlite3</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
       <libraries>
         <library>
@@ -15,15 +15,6 @@
           <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.45.1/org/slf4j/slf4j-api/1.7.36/slf4j-api-1.7.36.jar</url>
         </library>
       </libraries>
-    </data-source>
-    <data-source source="LOCAL" name="Django default" uuid="6832877c-05d3-40c9-8a6e-13b6a3c65844">
-      <driver-ref>sqlite.xerial</driver-ref>
-      <synchronize>true</synchronize>
-      <imported>true</imported>
-      <remarks>$PROJECT_DIR$/Backend/settings.py</remarks>
-      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:D:\BiblioGate-Backend\db.sqlite3</jdbc-url>
-      <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
   </component>
 </project>
