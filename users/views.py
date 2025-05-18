@@ -3,12 +3,13 @@ from django.utils.decorators import method_decorator
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework.response import Response
 from rest_framework.views import APIView
-
+from rest_framework.permissions import AllowAny
 from users.serializers import RegisterSerializer
+from books.models import Book
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class Login(APIView):
+    permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
         username = request.data.get('username')
         password = request.data.get('password')
@@ -20,8 +21,8 @@ class Login(APIView):
             return Response({"error": "Invalid credentials"}, status=401)
 
 
-@method_decorator(csrf_exempt, name='dispatch')
 class Register(APIView):
+    permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
         serializer = RegisterSerializer(data=request.data)
         if serializer.is_valid():

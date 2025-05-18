@@ -7,15 +7,12 @@ from dashboard.serializers import UserSerializer
 
 # Create your views here.
 
-
 User = get_user_model()
 
 class usersTable(APIView):
     def get(self, request, *args, **kwargs):
         id = request.query_params.get('id')
         username = request.query_params.get('username')
-
-
 
         filters = {}
         if id:

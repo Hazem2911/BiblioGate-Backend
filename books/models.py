@@ -1,5 +1,5 @@
 from django.db import models
-
+from users.models import Users
 # Create your models here.
 # -- Books table
 # CREATE TABLE Books (
@@ -21,3 +21,5 @@ class Book(models.Model):
     language = models.CharField(max_length=50 , default='English')
     image = models.CharField(max_length=1000)
     is_borrowed = models.BooleanField(default=False)
+    user = models.ForeignKey(Users, on_delete=models.CASCADE, blank=True, null=True, related_name='books')
+    user_favourite = models.ManyToManyField(Users, blank=True, related_name='favourites')
