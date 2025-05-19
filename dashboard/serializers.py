@@ -8,10 +8,12 @@ User = get_user_model()
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ['id', 'username', 'email', 'total_borrowings', 'total_returns', 'is_staff']
+        fields = ['id', 'username', 'email', 'total_borrowings', 'is_staff']
 
 class BorrowedBookSerializer(serializers.ModelSerializer):
     last_login = serializers.DateTimeField(source='user.last_login', read_only=True)
+    user = serializers.CharField(source='user.username', read_only=True)  # <-- Add this line
+
     class Meta:
         model = Book
         fields = ['id', 'title', 'category', 'user', 'last_login']

@@ -29,7 +29,7 @@ class GetBook(APIView):
 
 class DeleteBook(APIView):
     def delete(self, request, *args, **kwargs):
-        book_id = kwargs.get('book_id')
+        book_id = request.data.get('book_id')
         if book_id:
             try:
                 book = Book.objects.get(id=book_id)
@@ -42,11 +42,11 @@ class DeleteBook(APIView):
 
 class EditBook(APIView):
     def put(self, request, *args, **kwargs):
-        book_id = kwargs.get('book_id')
+        book_id = request.data.get('book_id')
         if book_id:
             try:
                 book = Book.objects.get(id=book_id)
-                serializer = addBook_serializer(book, data=request.data)
+                serializer = addBook_serializer(book, data=request.data, partial=True)
                 if serializer.is_valid():
                     serializer.save()
                     return Response({"message": "Book updated successfully"}, status=200)

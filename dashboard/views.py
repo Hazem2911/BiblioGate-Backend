@@ -48,4 +48,7 @@ class UserBorrowedBooks(APIView):
             return Response({"error": "User ID is required"}, status=status.HTTP_400_BAD_REQUEST)
         borrowed_books = Book.objects.filter(user=user_id)
         serializer = UserBorrowedBooksSerializer(borrowed_books, many=True)
-        return Response(serializer.data)
+        return Response({
+            "count": borrowed_books.count(),
+            "books": serializer.data
+        })
