@@ -15,6 +15,7 @@ class AddBook(APIView):
 class GetBook(APIView):
     def get(self, request, *args, **kwargs):
         book_id = kwargs.get('book_id')
+        user= request.user
         if book_id:
             try:
                 book = Book.objects.get(id=book_id)
@@ -25,6 +26,12 @@ class GetBook(APIView):
         else:
             books = Book.objects.all()
             serializer = getBook_serializer(books, many=True)
+            data = serializer.data
+            for book in data:
+                book.update({
+                    'requested_by': user.id,
+                })
+            print(data)
             return Response(serializer.data, status=200)
 
 class DeleteBook(APIView):
